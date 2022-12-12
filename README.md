@@ -16,3 +16,4 @@ Here are the relevant commands for different days:
 |-----|--------------------------------------------------------------------|
 | 1   | `go run main.go day1`                                              |
 | 2   | Part 1: `go run main.go day2.1`<br>Part 2: `go run main.go day2.2` |
+| 3   | `go run main.go day3`                                              |
