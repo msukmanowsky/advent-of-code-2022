@@ -8,60 +8,13 @@ import (
 	"github.com/msukmanowsky/advent-of-code-2022/utils"
 )
 
-// Used python to generate this ;)
-var priorities = map[string]int{
-	"a": 1,
-	"b": 2,
-	"c": 3,
-	"d": 4,
-	"e": 5,
-	"f": 6,
-	"g": 7,
-	"h": 8,
-	"i": 9,
-	"j": 10,
-	"k": 11,
-	"l": 12,
-	"m": 13,
-	"n": 14,
-	"o": 15,
-	"p": 16,
-	"q": 17,
-	"r": 18,
-	"s": 19,
-	"t": 20,
-	"u": 21,
-	"v": 22,
-	"w": 23,
-	"x": 24,
-	"y": 25,
-	"z": 26,
-	"A": 27,
-	"B": 28,
-	"C": 29,
-	"D": 30,
-	"E": 31,
-	"F": 32,
-	"G": 33,
-	"H": 34,
-	"I": 35,
-	"J": 36,
-	"K": 37,
-	"L": 38,
-	"M": 39,
-	"N": 40,
-	"O": 41,
-	"P": 42,
-	"Q": 43,
-	"R": 44,
-	"S": 45,
-	"T": 46,
-	"U": 47,
-	"V": 48,
-	"W": 49,
-	"X": 50,
-	"Y": 51,
-	"Z": 52,
+func getPriorities() map[rune]int {
+	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	priorities := make(map[rune]int)
+	for i, r := range letters {
+		priorities[r] = i + 1
+	}
+	return priorities
 }
 
 func setFromString(s string) map[rune]bool {
@@ -85,41 +38,54 @@ func setIntersection(m1, m2 map[rune]bool) map[rune]bool {
 	return sIntersection
 }
 
+func getSetElements(m map[rune]bool) []rune {
+	keys := make([]rune, len(m))
+	i := 0
+	for k := range m {
+		keys[i] = k
+		i += 1
+	}
+	return keys
+}
+
 type result struct {
+	Line                    string
 	Compartment1            string
 	Compartment2            string
 	SharedTypes             []string
 	TotalSharedTypePriority int
 }
 
-func Day3() {
-	parseLine := func(line string) result {
-		lineLen := len(line)
-		splitPoint := lineLen / 2
-		compartment1 := line[:splitPoint]
-		compartment1Set := setFromString(compartment1)
-		compartment2 := line[splitPoint:]
-		compartment2Set := setFromString(compartment2)
-		intersection := setIntersection(compartment1Set, compartment2Set)
-		sharedTypes := []string{}
-		totalSharedTypePriority := 0
-		for k, _ := range intersection {
-			ks := string(k)
-			priority, ok := priorities[ks]
-			if !ok {
-				log.Fatalln("unhandled priority: ", k)
-			}
-			sharedTypes = append(sharedTypes, ks)
-			totalSharedTypePriority += priority
+func parseLine(line string, priorities map[rune]int) result {
+	lineLen := len(line)
+	splitPoint := lineLen / 2
+	compartment1 := line[:splitPoint]
+	compartment1Set := setFromString(compartment1)
+	compartment2 := line[splitPoint:]
+	compartment2Set := setFromString(compartment2)
+	intersection := setIntersection(compartment1Set, compartment2Set)
+	sharedTypes := []string{}
+	totalSharedTypePriority := 0
+	for k, _ := range intersection {
+		priority, ok := priorities[k]
+		if !ok {
+			log.Fatalln("unhandled priority: ", k)
 		}
-
-		return result{
-			Compartment1:            compartment1,
-			Compartment2:            compartment2,
-			SharedTypes:             sharedTypes,
-			TotalSharedTypePriority: totalSharedTypePriority,
-		}
+		sharedTypes = append(sharedTypes, string(k))
+		totalSharedTypePriority += priority
 	}
+
+	return result{
+		Line:                    line,
+		Compartment1:            compartment1,
+		Compartment2:            compartment2,
+		SharedTypes:             sharedTypes,
+		TotalSharedTypePriority: totalSharedTypePriority,
+	}
+}
+
+func Day3_1() {
+	priorities := getPriorities()
 
 	file, err := os.Open(utils.ModRelativeFilePath("input.txt"))
 	if err != nil {
@@ -130,8 +96,44 @@ func Day3() {
 	scanner := bufio.NewScanner(file)
 	totalSharedTypePriority := 0
 	for scanner.Scan() {
-		result := parseLine(scanner.Text())
+		result := parseLine(scanner.Text(), priorities)
 		totalSharedTypePriority += result.TotalSharedTypePriority
 	}
+	log.Printf("Total Shared Type Priority: %d", totalSharedTypePriority)
+}
+
+func Day3_2() {
+	priorities := getPriorities()
+	file, err := os.Open(utils.ModRelativeFilePath("input.txt"))
+	if err != nil {
+		log.Fatalln("Error opening file: ", err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	group := []string{}
+	totalSharedTypePriority := 0
+	for scanner.Scan() {
+		line := scanner.Text()
+		group = append(group, line)
+		if len(group) == 3 {
+			s1 := setFromString(group[0])
+			s2 := setFromString(group[1])
+			s3 := setFromString(group[2])
+			intersection := setIntersection(s1, s2)
+			intersection = setIntersection(intersection, s3)
+			if len(intersection) != 1 {
+				log.Fatalln("badge parsing failed for group: ", group)
+			}
+			badge := getSetElements(intersection)[0]
+			priority := priorities[badge]
+			totalSharedTypePriority += priority
+			group = nil
+		}
+	}
+	if len(group) != 0 {
+		log.Fatalln("unresolved group", group)
+	}
+
 	log.Printf("Total Shared Type Priority: %d", totalSharedTypePriority)
 }
