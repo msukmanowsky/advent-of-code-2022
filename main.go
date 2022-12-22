@@ -10,6 +10,7 @@ import (
 	"github.com/msukmanowsky/advent-of-code-2022/day3"
 	"github.com/msukmanowsky/advent-of-code-2022/day4"
 	"github.com/msukmanowsky/advent-of-code-2022/day5"
+	"github.com/msukmanowsky/advent-of-code-2022/day6"
 )
 
 func main() {
@@ -22,6 +23,8 @@ func main() {
 	day4_2Cmd := flag.NewFlagSet("day4.2", flag.ExitOnError)
 	day5_1Cmd := flag.NewFlagSet("day5.1", flag.ExitOnError)
 	day5_2Cmd := flag.NewFlagSet("day5.2", flag.ExitOnError)
+	day6_1Cmd := flag.NewFlagSet("day6.1", flag.ExitOnError)
+	day6_2Cmd := flag.NewFlagSet("day6.2", flag.ExitOnError)
 
 	if len(os.Args) < 2 {
 		log.Fatalln("subcommand expected but not received")
@@ -55,6 +58,12 @@ func main() {
 	case "day5.2":
 		day5_2Cmd.Parse(os.Args[2:])
 		day5.Day5_2()
+	case "day6.1":
+		day6_1Cmd.Parse(os.Args[2:])
+		day6.Day6_1()
+	case "day6.2":
+		day6_2Cmd.Parse(os.Args[2:])
+		day6.Day6_2()
 	default:
 		log.Fatalln("expected a valid subcommand")
 	}
