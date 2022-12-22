@@ -98,41 +98,6 @@ func Day6_1() {
 	}
 
 	fmt.Printf("consumed %d chars to find first non-repeating %d-length sequence %+v\n", result.charsRead, windowSize, string(result.window))
-
-	// // initialize the window
-	// for i := 0; i < windowSize; i++ {
-	// 	r, _, err := reader.ReadRune()
-	// 	if err == io.EOF {
-	// 		log.Fatal("Not enough chars in input to initialize window")
-	// 	}
-	// 	window[i] = r
-	// 	charsRead += 1
-	// }
-
-	// windowSet := windowToSet(window)
-	// if len(windowSet) == WindowSize {
-	// 	fmt.Printf("consumed %d chars to find first non-repeating %d-length sequence %+v\n", charsRead, WindowSize, string(window))
-	// 	return
-	// }
-
-	// for {
-	// 	r, _, err := reader.ReadRune()
-	// 	if err != nil {
-	// 		if err == io.EOF {
-	// 			break
-	// 		} else {
-	// 			log.Fatal(err)
-	// 		}
-	// 	}
-	// 	charsRead += 1
-	// 	// shift left by 1
-	// 	window = append(window[1:], r)
-	// 	windowSet = windowToSet(window)
-	// 	if len(windowSet) == WindowSize {
-	//		fmt.Printf("consumed %d chars to find first non-repeating %d-length sequence %+v\n", charsRead, WindowSize, string(window))
-	// 		return
-	// 	}
-	// }
 }
 
 func Day6_2() {
