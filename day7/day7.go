@@ -246,7 +246,6 @@ func Day7_2() {
 	var toDelete *Dir
 	for _, dir := range dirs {
 		size := dir.Size()
-		log.Printf("%s (%d)", dir.Path(), size)
 		if size >= freeSpaceNeeded {
 			toDelete = &dir
 			break
