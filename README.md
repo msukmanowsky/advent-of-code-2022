@@ -20,3 +20,4 @@ Here are the relevant commands for different days:
 | 4   | Part 1: `go run main.go day4.1`<br>Part 2: `go run main.go day4.2` |
 | 5   | Part 1: `go run main.go day5.1`<br>Part 2: `go run main.go day5.2` |
 | 6   | Part 1: `go run main.go day6.1`<br>Part 2: `go run main.go day6.2` |
+| 7   | Part 1: `go run main.go day7.1`<br>Part 2: `go run main.go day7.2` |
